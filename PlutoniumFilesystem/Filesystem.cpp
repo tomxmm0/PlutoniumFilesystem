@@ -24,15 +24,13 @@ std::string Filesystem::Read()
 	if (ValidMode(mode_, { "r", "r+", "w+", "a+" }))
 	{
 		std::vector<char> content;
-		int c;
 
-		do
+		int c = fgetc(handle_);
+		while (c != EOF)
 		{
-			c = fgetc(handle_);
 			content.emplace_back(static_cast<char>(c));
-		} 
-		while (c != EOF);
-
+			c = fgetc(handle_);
+		}
 		fseek(handle_, 0, SEEK_SET);
 
 		return std::string(content.begin(), content.end());
