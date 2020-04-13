@@ -5,7 +5,7 @@ Filesystem::Filesystem(const std::string& file, const std::string& mode)
 {
 	if (!FileExists(file))
 	{
-		throw std::exception((file + "does not exist.").data());
+		throw std::exception(("[Plutonium Filesystem]: " + file + " does not exist.").data());
 	}
 
 	if (ValidMode(mode, { "r", "w", "a", "r+", "w+", "a+" }))
@@ -15,7 +15,7 @@ Filesystem::Filesystem(const std::string& file, const std::string& mode)
 	}
 	else
 	{
-		throw std::exception("Invalid file mode.");
+		throw std::exception("[Plutonium Filesystem]: Invalid file mode.");
 	}
 }
 
@@ -37,7 +37,7 @@ std::string Filesystem::Read()
 	}
 	else
 	{
-		throw std::exception("Invalid mode for reading.");
+		throw std::exception("[Plutonium Filesystem]: Invalid mode for reading.");
 	}
 }
 
@@ -49,7 +49,7 @@ void Filesystem::Write(const std::string& text)
 	}
 	else
 	{
-		throw std::exception("Invalid mode for writing/appending.");
+		throw std::exception("[Plutonium Filesystem]: Invalid mode for writing/appending.");
 	}
 }
 
