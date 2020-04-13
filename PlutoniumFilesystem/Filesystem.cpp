@@ -1,0 +1,71 @@
+#include "pch.h"
+#include "Filesystem.hpp"
+
+Filesystem::Filesystem(const std::string& file, const std::string& mode)
+{
+	if (!FileExists(file))
+	{
+		throw std::exception((file + "does not exist.").data());
+	}
+
+	if (ValidMode(mode, { "r", "w", "a", "r+", "w+", "a+" }))
+	{
+		fopen_s(&handle_, file.data(), mode.data());
+		mode_ = mode;
+	}
+	else
+	{
+		throw std::exception("Invalid file mode.");
+	}
+}
+
+std::string Filesystem::Read()
+{
+	if (ValidMode(mode_, { "r", "r+", "w+", "a+" }))
+	{
+		std::vector<char> content;
+
+		int c = fgetc(handle_);
+		while (c != EOF)
+		{
+			content.emplace_back(static_cast<char>(c));
+			c = fgetc(handle_);
+		}
+		fseek(handle_, 0, SEEK_SET);
+
+		return std::string(content.begin(), content.end());
+	}
+	else
+	{
+		throw std::exception("Invalid mode for reading.");
+	}
+}
+
+void Filesystem::Write(const std::string& text)
+{
+	if (ValidMode(mode_, { "w", "a", "r+", "w+", "a+" }))
+	{
+		fprintf_s(handle_, text.data());
+	}
+	else
+	{
+		throw std::exception("Invalid mode for writing/appending.");
+	}
+}
+
+void Filesystem::Close()
+{
+	fclose(handle_);
+}
+
+bool Filesystem::FileExists(const std::string& file)
+{
+	return std::filesystem::exists(file);
+}
+
+bool Filesystem::ValidMode(const std::string& mode, const std::initializer_list<std::string>& list)
+{
+	auto iter = std::find(list.begin(), list.end(), mode);
+
+	return iter != list.end();
+}
