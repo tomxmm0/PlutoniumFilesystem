@@ -3,10 +3,18 @@
 
 Filesystem::Filesystem(const std::string& file, const std::string& mode)
 {
+	auto parent_path = std::filesystem::absolute(std::filesystem::path(file)).parent_path();
+
+	if (std::filesystem::current_path().compare(parent_path) > 0)
+	{
+		throw std::exception("[Plutonium Filesystem]: File must exist within the game folder");
+	}
+
 	if (!FileExists(file))
 	{
 		throw std::exception(("[Plutonium Filesystem]: " + file + " does not exist.").data());
 	}
+
 
 	if (ValidMode(mode, { "r", "w", "a", "r+", "w+", "a+" }))
 	{
