@@ -18,7 +18,7 @@ Filesystem::Filesystem(const std::string& file, const std::string& mode)
 
 	if (ValidMode(mode, { "r", "w", "a", "r+", "w+", "a+" }))
 	{
-		fopen_s(&handle_, ("./" + file).data(), mode.data());
+		fopen_s(&handle_, file.data(), mode.data());
 		mode_ = mode;
 	}
 	else
