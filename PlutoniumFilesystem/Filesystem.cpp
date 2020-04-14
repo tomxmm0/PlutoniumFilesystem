@@ -21,8 +21,6 @@ Filesystem::Filesystem(const std::string& file, const std::string& mode)
 
 Filesystem::~Filesystem()
 {
-	std::cout << "Deconstructor";
-
 	if (handle_ != nullptr)
 	{
 		fclose(handle_);
