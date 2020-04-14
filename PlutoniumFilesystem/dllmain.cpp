@@ -2,37 +2,19 @@
 #include "pch.h"
 #include "Filesystem.hpp"
 
-namespace ChaiFunctions
-{
-    Filesystem OpenFile(const std::string& file, const std::string& mode)
-    {
-        return Filesystem(file, mode);
-    }
-
-    std::string ReadFile(Filesystem* fs)
-    {
-        return fs->Read();
-    }
-
-    void WriteFile(Filesystem* fs, const std::string& text)
-    {
-        fs->Write(text);
-    }
-
-    void CloseFile(Filesystem* fs)
-    {
-        fs->Close();
-    }
-}
-
 extern "C"
 {
     __declspec(dllexport) void on_initialize_context(const char* script, chaiscript::ChaiScript* chai)
     {
-        chai->add(chaiscript::fun(ChaiFunctions::OpenFile), "OpenFile");
-        chai->add(chaiscript::fun(ChaiFunctions::ReadFile), "ReadFile");
-        chai->add(chaiscript::fun(ChaiFunctions::WriteFile), "WriteFile");
-        chai->add(chaiscript::fun(ChaiFunctions::CloseFile), "CloseFile");
+        auto module_ptr = chaiscript::ModulePtr(new chaiscript::Module());
+
+        module_ptr->add(chaiscript::user_type<Filesystem>(), "Filesystem");
+        module_ptr->add(chaiscript::constructor<Filesystem(const std::string&, const std::string&)>(), "Filesystem");
+        module_ptr->add(chaiscript::fun(&Filesystem::Read), "Read");
+        module_ptr->add(chaiscript::fun(&Filesystem::Write), "Write");
+        module_ptr->add(chaiscript::fun(&Filesystem::Close), "Close");
+
+        chai->add(module_ptr);
     }
 
     __declspec(dllexport) void on_script_loaded(const char* script, chaiscript::ChaiScript* chai)

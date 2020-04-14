@@ -19,6 +19,16 @@ Filesystem::Filesystem(const std::string& file, const std::string& mode)
 	}
 }
 
+Filesystem::~Filesystem()
+{
+	std::cout << "Deconstructor";
+
+	if (handle_ != nullptr)
+	{
+		fclose(handle_);
+	}
+}
+
 std::string Filesystem::Read()
 {
 	if (ValidMode(mode_, { "r", "r+", "w+", "a+" }))
@@ -43,9 +53,12 @@ std::string Filesystem::Read()
 
 void Filesystem::Write(const std::string& text)
 {
+	std::cout << text.data() << "\n";
+
 	if (ValidMode(mode_, { "w", "a", "r+", "w+", "a+" }))
 	{
 		fprintf_s(handle_, text.data());
+		fseek(handle_, 0, SEEK_SET);
 	}
 	else
 	{
@@ -55,7 +68,10 @@ void Filesystem::Write(const std::string& text)
 
 void Filesystem::Close()
 {
-	fclose(handle_);
+	if (handle_ != nullptr)
+	{
+		fclose(handle_);
+	}
 }
 
 bool Filesystem::FileExists(const std::string& file)

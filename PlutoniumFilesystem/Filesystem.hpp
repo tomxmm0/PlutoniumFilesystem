@@ -7,6 +7,7 @@ private:
 	std::string mode_;
 public:
 	Filesystem(const std::string& file, const std::string& mode);
+	~Filesystem();
 
 	std::string Read();
 	void Write(const std::string& str);
