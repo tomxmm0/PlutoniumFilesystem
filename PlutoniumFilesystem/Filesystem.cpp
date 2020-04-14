@@ -51,8 +51,6 @@ std::string Filesystem::Read()
 
 void Filesystem::Write(const std::string& text)
 {
-	std::cout << text.data() << "\n";
-
 	if (ValidMode(mode_, { "w", "a", "r+", "w+", "a+" }))
 	{
 		fprintf_s(handle_, text.data());
