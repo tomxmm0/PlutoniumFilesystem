@@ -29,10 +29,7 @@ Filesystem::Filesystem(const std::string& file, const std::string& mode)
 
 Filesystem::~Filesystem()
 {
-	if (handle_ != nullptr)
-	{
-		fclose(handle_);
-	}
+	Close();
 }
 
 std::string Filesystem::Read()
